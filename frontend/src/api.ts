@@ -1,4 +1,4 @@
-const BASE = "http://localhost:8000";
+const BASE = import.meta.env.VITE_API_URL || "https://ai-bedtime-story-generator-two.vercel.app";
 
 export async function generateStory(theme: string, sessionId?: string) {
     const res = await fetch(`${BASE}/api/generate`, {
