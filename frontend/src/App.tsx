@@ -45,8 +45,12 @@ export default function App() {
     setError("");
     try {
       const data = await continueStory(sessionId, feedback);
-      if (data.status === "rejected") { 
-        setError(data.reason); 
+      if (data.status === "rejected") {
+        setError(data.reason);
+      } else if (data.status === "session_not_found") {
+        setError("Your story session has expired. Please start a new story.");
+        setSessionId(null);
+        setStoryParts([]);
       } else {
         // APPEND the new chapter to our existing story array
         setStoryParts(prev => [...prev, data.story]);

@@ -12,7 +12,12 @@ Keep it detailed (5-6 paragraphs), safe, and use vivid vocabulary.
 def writer_node(state: AgentState):
     print("--- [WRITER] GENERATING STORY... ---")
     messages = [SystemMessage(content=WRITER_PROMPT)] + state["messages"]
-    
+
+    if state.get("draft_story"):
+        messages.insert(1, SystemMessage(
+            content=f"PREVIOUS STORY SO FAR:\n{state['draft_story']}"
+        ))
+
     if state.get("research_data"):
         messages.append(SystemMessage(content=f"RESEARCH FACTS: {state['research_data']}"))
         

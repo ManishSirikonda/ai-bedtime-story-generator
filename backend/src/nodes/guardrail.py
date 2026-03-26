@@ -10,8 +10,21 @@ SEARCH_KEYWORDS = [
     "announced", "current", "today", "this year", "2025", "2026"
 ]
 
+CONTINUE_PHRASES = {
+    "continue", "keep going", "go on", "next", "more",
+    "what happens next", "and then", "keep writing",
+    "go ahead", "please continue", "carry on"
+}
+
 def guardrail_node(state: AgentState):
     print("--- [GUARDRAIL] CHECKING SAFETY... ---")
+
+    # Short-circuit: pure continuation directives need no safety evaluation
+    user_lower = state["user_input"].lower().strip()
+    if user_lower in CONTINUE_PHRASES:
+        print("--- [GUARDRAIL] Continuation directive detected, skipping LLM check. ---")
+        return {"status": "retry_writer", "needs_search": False}
+
     prompt = (
         "Check if the following story beat or theme is appropriate for kids aged 5-10. "
         "SAFETY RULES: Refuse topics involving: sex, murder, killing, death, suicide, harassment, extreme violence, or graphic content. "

@@ -66,7 +66,13 @@ def generate_story(req: GenerateRequest):
 
 @app.post("/api/continue")
 def continue_story(req: ContinueRequest):
-    prev = sessions.get(req.session_id, {})
+    prev = sessions.get(req.session_id)
+    if not prev:
+        return {
+            "session_id": req.session_id,
+            "status": "session_not_found",
+            "reason": "Session not found. Please start a new story.",
+        }
 
     state = {
         "user_input": req.feedback,
